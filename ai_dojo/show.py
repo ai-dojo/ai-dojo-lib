@@ -1,7 +1,7 @@
 from IPython.display import display, Markdown, HTML
 import requests
 import html
-
+import re
 
 
 def command(cmd):
@@ -122,3 +122,72 @@ def github_repo(repo_url, github_token=None):
         """
         display(HTML(html_content))
 
+
+
+
+
+def huggingface_model(model_url):
+    """
+    Display a preview of a Hugging Face model in a Jupyter Notebook.
+
+    This function fetches model information from the Hugging Face Model API and displays
+    an HTML formatted preview including the model's name, likes, tags, license, and a short
+    description. If an error occurs during the API request, or if the request times out
+    after 5 seconds, it displays a fallback message with the model URL.
+
+    Parameters:
+        model_url (str): The full URL of the Hugging Face model page.
+
+    Returns:
+        None: This function directly renders HTML content in a Jupyter Notebook
+        environment and does not return any value.
+
+    Example usage:
+        display_hf_model("https://huggingface.co/bert-base-uncased")
+    """
+
+    # Extract the model ID from the URL
+    match = re.search(r'huggingface\.co/([^/?]+)', model_url)
+    if not match:
+        display(HTML("<p>Error: Invalid Hugging Face URL provided.</p>"))
+        return
+    model_id = match.group(1)
+    
+    # Prepare the API URL
+    api_url = f"https://huggingface.co/api/models/{model_id}"
+    
+    try:
+        # Fetch model data from Hugging Face API with a timeout
+        response = requests.get(api_url, timeout=5)  # 5 seconds timeout
+        
+        if response.status_code == 200:
+            model_data = response.json()
+            # Prepare elements from the response
+            model_name = model_data.get('modelId', 'Model Name')
+            likes = model_data.get('likes', 0)
+            tags = ", ".join(model_data.get('tags', []))
+            license_info = model_data.get('license', 'No license provided')
+            description = model_data.get('description', 'No description provided.')
+            
+            # Construct HTML content
+            html_content = f"""
+            <div style="border:1px solid #e1e4e8; padding: 20px; border-radius: 6px; font-family: Arial, sans-serif; box-shadow: 0 2px 3px rgba(0,0,0,0.1); display: flex; align-items: center; flex-direction: column;">
+                <strong style="font-size: 20px;"><a href="{model_url}" target="_blank">{model_name}</a></strong>
+                <p style="margin: 5px 0;"><strong>Likes:</strong> {likes}</p>
+                <p style="margin: 5px 0;"><strong>Tags:</strong> {tags}</p>
+                <p style="margin: 5px 0;"><strong>License:</strong> {license_info}</p>
+                <p style="margin: 5px 0;"><em>{description}</em></p>
+            </div>
+            """
+            display(HTML(html_content))
+        else:
+            raise Exception("Failed to fetch data from Hugging Face API")
+    except Exception as e:
+        # Fallback display when any error occurs
+        html_content = f"""
+        <div style="border:1px solid #e1e4e8; padding: 20px; border-radius: 6px; font-family: Arial, sans-serif; box-shadow: 0 2px 3px rgba(0,0,0,0.1); text-align: center;">
+            <p style="font-size: 18px;">Unable to fetch model details due to an error: {str(e)}</p>
+            <p style="font-size: 16px; font-weight: bold;"><a href="{model_url}" target="_blank">Visit Model Page</a></p>
+        </div>
+        """
+        display(HTML(html_content))
