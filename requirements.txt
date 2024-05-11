@@ -1,0 +1,2 @@
+jupyterthemes
+seaborn
