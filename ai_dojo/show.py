@@ -1,8 +1,8 @@
-from IPython.display import display, Markdown, HTML
+from IPython.display import display, Markdown, HTML, Audio
 import requests
 import html
 import re
-
+import numpy as np
 
 def command(cmd):
     """
@@ -202,3 +202,20 @@ def huggingface_model(model_url):
         </div>
         """
         display(HTML(html_content))
+
+
+
+def audio(waveform, sample_rate):
+    # Ensure waveform is a numpy array
+    waveform = waveform.numpy()
+    
+    # Normalize the waveform to be between -1 and 1 if not already
+    max_val = np.max(np.abs(waveform))
+    if max_val > 1:
+        waveform = waveform / max_val
+    
+    # Convert waveform to 16-bit PCM format
+    waveform_int16 = np.int16(waveform * 32767)
+    
+    # Create the audio player object with the scaled waveform
+    return Audio(waveform_int16, rate=sample_rate)
