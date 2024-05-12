@@ -45,30 +45,16 @@ def text(text: str, limit: int = 1000):
     # Display the text as Markdown
     display(Markdown(limited_text))
 
-def stream(stream, break_after=20):
+def stream(stream):
     """
-    Show the streaming response of LLMs.
+    Show the streaming response of language models.
 
-    Parameters:
-    break_after (int): The number of chunks after which a newline should be inserted.
+    This function prints each chunk of the stream continuously without line breaks.
     """
-    # Initialize a counter to track the number of chunks processed
-    counter = 0
     # Process each chunk in the stream
     for chunk in stream:
         # Print the content of the current chunk without a newline at the end
         print(chunk['message']['content'], end='', flush=True)
-        
-        # Increment the counter
-        counter += 1
-        
-        # Check if the counter has reached 'k' chunks
-        if counter == break_after:
-            # Print a newline to wrap the line
-            print()  # This effectively adds a newline
-            
-            # Reset the counter to zero
-            counter = 0
 
 
 def github_repo(repo_url, github_token=None):
