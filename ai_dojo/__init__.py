@@ -6,6 +6,7 @@ from . import (
     mlp,
     mlts,
     show,
+    plot,
 )
 
 import seaborn
