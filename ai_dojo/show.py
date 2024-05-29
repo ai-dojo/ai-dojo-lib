@@ -57,7 +57,7 @@ def image(image_path: str, caption: str = None):
     
     # If a caption is provided, display it as Markdown below the image
     if caption:
-        display(Markdown(f'*{caption}*'))
+        display(Markdown(f'{caption}'))
 
 
 def stream(stream):
