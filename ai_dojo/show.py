@@ -1,4 +1,4 @@
-from IPython.display import display, Markdown, HTML, Audio
+from IPython.display import display, Markdown, HTML, Audio, Image
 import requests
 import html
 import re
@@ -44,6 +44,21 @@ def text(text: str, limit: int = 1000):
     limited_text = text[:limit]
     # Display the text as Markdown
     display(Markdown(limited_text))
+
+def image(image_path: str, caption: str = None):
+    """Display an image with an optional caption formatted with IPython.display tools.
+
+    Args:
+    image_path (str): The path to the image file to be displayed.
+    caption (str, optional): The caption to display below the image. Defaults to None.
+    """
+    # Display the image using the Image class from IPython.display
+    display(Image(filename=image_path))
+    
+    # If a caption is provided, display it as Markdown below the image
+    if caption:
+        display(Markdown(f'*{caption}*'))
+
 
 def stream(stream):
     """
