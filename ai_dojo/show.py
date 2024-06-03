@@ -100,7 +100,12 @@ def github_repo(repo_url, github_token=None):
             # Prepare elements from the response
             repo_name = repo_data.get('name', 'Repository Name')
             stars = repo_data.get('stargazers_count', 0)
-            license_info = repo_data.get('license', {}).get('name', 'No license')
+
+            # if there is no license, then key "license" is set to None instead of a dict
+            license_info = (repo_data.get('license') or {}).get('name', 'No license')
+
+            # todo it might be that the fallbacks ({}) do not work
+            # if you get an error here, look at how license_info fallback is done
             avatar_url = repo_data.get('owner', {}).get('avatar_url', 'https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png')
             organization = repo_data.get('owner', {}).get('login', 'No organization')
             description = repo_data.get('description', 'No description provided.')
@@ -132,9 +137,6 @@ def github_repo(repo_url, github_token=None):
         </div>
         """
         display(HTML(html_content))
-
-
-
 
 
 def huggingface_model(model_url):
