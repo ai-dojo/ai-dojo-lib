@@ -234,3 +234,29 @@ def audio(waveform, sample_rate):
     
     # Create the audio player object with the scaled waveform
     return Audio(waveform_int16, rate=sample_rate)
+
+
+def dataframe_with_text(df, max_colwidth=400):
+    """
+    This function displays a DataFrame with specified settings for text wrapping and column width.
+    
+    Args:
+    df (pandas.DataFrame): The DataFrame to display.
+    max_colwidth (int): The maximum width of each column in characters. Default is 50.
+    """
+    # Define the CSS properties for text wrapping and alignment
+    styles = {
+        'selector': 'th, td',
+        'props': [
+            ('text-align', 'left'),     # Align text to the left
+            ('vertical-align', 'top'),  # Align text to the top
+            ('white-space', 'normal'),  # Allow normal wrapping of text
+            ('word-wrap', 'break-word'),# Allow long words to be broken and wrapped
+            ('max-width', f'{max_colwidth}px') # Set maximum width of each column
+        ]
+    }
+    
+    # Use a context manager to temporarily set display options
+    with pd.option_context('display.max_columns', None, 'display.expand_frame_repr', True, 'display.width', None):
+        # Display DataFrame with styling
+        display(df.style.set_table_styles([styles]))
