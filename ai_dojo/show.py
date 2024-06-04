@@ -239,13 +239,15 @@ def audio(waveform, sample_rate):
     return Audio(waveform_int16, rate=sample_rate)
 
 
-def dataframe_with_text(df, max_colwidth=400):
+def dataframe_with_text(df, max_colwidth=400, max_chars=100):
     """
-    This function displays a DataFrame with specified settings for text wrapping and column width.
+    This function displays a DataFrame with specified settings for text wrapping, column width,
+    and truncation of text exceeding a specified character limit.
     
     Args:
-    df (pandas.DataFrame): The DataFrame to display.
-    max_colwidth (int): The maximum width of each column in characters. Default is 50.
+    df (pd.DataFrame): The DataFrame to display.
+    max_colwidth (int): The maximum width of each column in pixels.
+    max_chars (int): The maximum number of characters in each cell before truncating.
     """
     # Define the CSS properties for text wrapping and alignment
     styles = {
@@ -258,8 +260,14 @@ def dataframe_with_text(df, max_colwidth=400):
             ('max-width', f'{max_colwidth}px') # Set maximum width of each column
         ]
     }
-    
+
+    # Define a lambda function to truncate text
+    truncator = lambda x: (x if len(str(x)) <= max_chars else str(x)[:max_chars] + '...')
+
+    # Apply the truncator function to each element in the DataFrame
+    df_truncated = df.applymap(truncator)
+
     # Use a context manager to temporarily set display options
     with pandas.option_context('display.max_columns', None, 'display.expand_frame_repr', True, 'display.width', None):
         # Display DataFrame with styling
-        display(df.style.set_table_styles([styles]))
+        display(df_truncated.style.set_table_styles([styles]))
