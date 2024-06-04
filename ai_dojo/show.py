@@ -239,7 +239,7 @@ def audio(waveform, sample_rate):
     return Audio(waveform_int16, rate=sample_rate)
 
 
-def dataframe_with_text(df, max_colwidth=400, max_chars=100):
+def dataframe_with_text(df, max_colwidth=400, max_chars=500):
     """
     This function displays a DataFrame with specified settings for text wrapping, column width,
     and truncation of text exceeding a specified character limit.
