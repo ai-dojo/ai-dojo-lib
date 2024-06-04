@@ -3,6 +3,7 @@ import requests
 import html
 import re
 import numpy as np
+import pandas
 
 def command(cmd):
     """
@@ -259,6 +260,6 @@ def dataframe_with_text(df, max_colwidth=400):
     }
     
     # Use a context manager to temporarily set display options
-    with pd.option_context('display.max_columns', None, 'display.expand_frame_repr', True, 'display.width', None):
+    with pandas.option_context('display.max_columns', None, 'display.expand_frame_repr', True, 'display.width', None):
         # Display DataFrame with styling
         display(df.style.set_table_styles([styles]))
