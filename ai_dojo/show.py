@@ -5,13 +5,14 @@ import re
 import numpy as np
 import pandas
 
+
 def command(cmd):
     """
     Display a terminal command with an HTML layout, including a "Copy" button with a clipboard symbol.
     
-    This function produces a stylized HTML representation of a terminal command.
-    It features a light gray background, rounded corners, and a "Copy" button that
-    allows users to copy the command to their clipboard using a clipboard symbol as the button label.
+    This function produces an HTML representation of a terminal command.
+    It features a rounded box border around the command, no background color, and default text color,
+    along with a "Copy" button that allows users to copy the command to their clipboard using a clipboard symbol as the button label.
     
     Parameters:
         cmd (str): The terminal command to be displayed.
@@ -25,11 +26,11 @@ def command(cmd):
     # Escape the command to safely display special HTML characters
     escaped_cmd = html.escape(cmd)
     
-    # HTML content with styling for the terminal command display and copy functionality
+    # HTML content with minimal styling for the terminal command display and copy functionality
     html_content = f"""
-    <div style='margin:10px 0; padding:10px; background-color:#f0f0f0; border:1px solid #ccc; border-radius: 5px; display: flex; align-items: center;'>
+    <div style='margin:10px 0; padding:10px; border: 1px solid #ccc; border-radius: 5px; display: flex; align-items: center;'>
         <tt style='flex-grow: 1;'>{escaped_cmd}</tt>
-        <button onclick='navigator.clipboard.writeText("{escaped_cmd}")' style='padding: 5px 10px; margin-left: 10px; cursor: pointer; border: none; background-color: #ccc; color: #333; border-radius: 5px;'>📋</button>
+        <button onclick='navigator.clipboard.writeText("{escaped_cmd}")' style='padding: 5px 10px; margin-left: 10px; cursor: pointer; border: none; background-color: transparent; color: inherit; border-radius: 5px;'>📋</button>
     </div>
     """
     return HTML(html_content)
